@@ -26,10 +26,8 @@ app.get('/product/retrieve/:id', (req, res) => {
         })
     }
 
-    console.log(`tshirt GET api called from ${req.hostname} to retrieve product with ID=${id}`)
+    console.log(`Product GET(with ID) api called from ${req.hostname} to retrieve product with ID=${id}`)
     let toReturn = products.get(id)
-    console.log(products.keys)
-    console.log(toReturn)
     if(!toReturn){
         res.status(418).send({
             message: "No product exists with the requested ID"
@@ -45,9 +43,9 @@ app.get('/product/retrieve/:id', (req, res) => {
 })
 
 
-// TO-DO add a post method to update existing product
+// create new product
 app.post('/product/create', (req, res) => {
-    console.log(`tshirt POST api called from ${req.hostname}`)
+    console.log(`Product POST(create) api called from ${req.hostname}`)
 
     // retrieve data from passed json
     const data = req.body
@@ -83,4 +81,19 @@ app.post('/product/create', (req, res) => {
     }
 })
 
+// update existing product
+app.post(('/product/update'), (req, res) => {
+    console.log(`Product POST(update) API called from ${req.hostname}`)
+    const data = req.body
+    const id = data.id
+    let beforeUpdate = products.get(id)
+    if(beforeUpdate){
+        beforeUpdate.name = data.name
+        beforeUpdate.quantity = data.quantity
+    }
+
+    res.status(200).send({
+        message: `Product with ID=${beforeUpdate.id} was updated to have name '${beforeUpdate.name} and quantity ${beforeUpdate.quantity}'`
+    })
+})
 
