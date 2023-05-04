@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import product from "../product.js";
 
 
-// TO-DO add getAllProducts, getProductsWithCategory
+// TO-DO add getAllProducts, getProductsWithCategory, deleteProducts
 
 
 
