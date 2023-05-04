@@ -13,7 +13,7 @@ export function setup(): Express {
 }
 
 export function start(): void {
-    var app = setup()
+    var app = exports.setup()
     const server = http.createServer(app)
     const PORT = 8080
     server.listen(PORT, () =>{
