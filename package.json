@@ -5,9 +5,7 @@
   "main": "source/server.ts",
   "type": "module",
   "scripts": {
-    "dev": "nodemon source_js/server.js",
-    "build": "tsc",
-    "start": "ts-node ./source/server.ts",
+    "start": "tsc && nodemon source_js/server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
