@@ -1,6 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import product from "../product.js";
-
+const product = require("../product.ts")
 
 // TO-DO add getAllProducts, getProductsWithCategory, deleteProducts
 
