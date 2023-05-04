@@ -4,4 +4,4 @@
 
 ## <ins>Usage:</ins>
 
-### Insomnia can be used to make requests to the API and observe the returned results
+### Insomnia can be used to make dummy requests to the API and observe the returned results
