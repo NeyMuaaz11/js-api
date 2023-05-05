@@ -3,9 +3,8 @@
   "version": "1.0.0",
   "description": "",
   "main": "source/server.ts",
-  "type": "module",
   "scripts": {
-    "start": "tsc && nodemon source_js/server.js",
+    "start": "npx ts-node --esm source/main.ts",
     "test": "jest"
   },
   "keywords": [],

@@ -1,25 +1,28 @@
 import http from 'http';
 import express, { Express } from 'express';
-import morgan from 'morgan';
 const routes = require("./router/routes")
 
+export default class APIServer{
 
-export function setup(): Express {
-    const app = express()
-    app.use(morgan('dev'))
-    app.use(express.json())
-    app.use('/', routes.router)
-    return app
+    app: Express;
+
+    constructor(app: Express){
+        this.app = app
+    }
+
+    setup(): Express {
+        this.app.use(express.json())
+        this.app.use('/', routes.router)
+        return this.app
+    }
+
+    start(): void {
+        var app = this.setup()
+        const server = http.createServer(app)
+        const PORT = 8080
+        server.listen(PORT, () =>{
+            console.log(`API is live on http://localhost:${PORT}`)
+        })
+    }
+
 }
-
-export function start(): void {
-    var app = exports.setup()
-    const server = http.createServer(app)
-    const PORT = 8080
-    server.listen(PORT, () =>{
-        console.log(`API is live on http://localhost:${PORT}`)
-    })
-}
-
-
-// start()
