@@ -7,4 +7,4 @@
 **Insomnia** can be used to make dummy requests to the API and observe the returned results
 
 # Usage
-``` npm run start ``` will build and run the API server. You can use the link provided on the terminal to access the API.
+``` npm start ``` will build and run the API server. You can use the link provided on the terminal to access the API.
