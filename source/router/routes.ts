@@ -3,9 +3,9 @@ import controller from "../controllers/posts"
 
 const router = express.Router()
 
-router.get("/product/retrieve/:id", controller.getProductWithID);
-router.get("/product/retrieve/", controller.getProductWithID);
-router.post("/product/create", controller.createProduct);
-router.post("/product/update", controller.updateProduct);
+router.get("/product/:id", controller.getProductWithID);
+router.get("/product/", controller.getAllProducts);
+router.post("/product/", controller.createProduct);
+router.put("/product/", controller.updateProduct);
 
 export default router

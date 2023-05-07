@@ -1,17 +1,17 @@
-import { Entity, Column, PrimaryGeneratedColumn, BaseEntity, PrimaryColumn } from "typeorm";
+import { Entity, Column, BaseEntity, PrimaryGeneratedColumn } from "typeorm";
 import 'reflect-metadata'
 
 // db model for the product class
-@Entity({name: "product"})
+@Entity({ name: "product" })
 export class productModel extends BaseEntity {
 
-    @PrimaryColumn("int")
+    @PrimaryGeneratedColumn()
     id: number | undefined
 
     @Column("varchar")
-    name: String | undefined
+    name: string | undefined
 
     @Column("int")
-    quantity: Number | undefined 
+    quantity: number | undefined
 
 }

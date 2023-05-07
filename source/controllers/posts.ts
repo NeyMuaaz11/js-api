@@ -1,106 +1,101 @@
-import { Request, Response, NextFunction } from "express";
-import {productModel} from "../entity/productModel"
+import { Request, Response } from "express";
+import { productModel } from "../entity/productModel"
 import db from "../data_source"
 
 
 
+
+
+const getAllProducts = async (req: Request, res: Response) => {
+    const productRepository = db.getRepository(productModel)
+    try {
+        const dataList = await productRepository.find()
+        res.status(200).send({
+            products: Array.from(dataList.values())
+        })
+    } catch (error: unknown) {
+        console.error(error)
+        res.status(400).send({
+            message: "An unknown error occured"
+        })
+    }
+}
+
 const getProductWithID = async (req: Request, res: Response) => {
     const queriedID = Number(req.params.id)
+
+    // check for missing ID
     if (!queriedID) {
         res.status(400).send({
             message: "missing ID"
         })
         return
     }
-    const productRepository = await db.getRepository(productModel)
-    productRepository.find({
-        where: {
-            id: queriedID
-        }
-    })
-    .then((dataList) => {
-        if(dataList.length > 0){
+    const productRepository = db.getRepository(productModel)
+    try {
+        const dataList = await productRepository.find({
+            where: {
+                id: queriedID
+            }
+        })
+        if (dataList.length > 0) {
             const returnedData = dataList[0]
             res.status(200).send({
                 id: returnedData.id,
                 name: returnedData.name,
                 quantity: returnedData.quantity
             })
-        }else{
+        } else {
             res.status(400).send({
                 message: "No product exists with the requested ID",
             })
         }
-        return
-    }).catch((error) => {
-        res.status(400).send({
-            error: error.message
+    } catch (error: unknown) {
+        console.error(error)
+        res.status(500).send({
+            message: "An unknown error occured"
         })
-        return
-    })
-        
-     
+    }
 }
 
 
 const createProduct = async (req: Request, res: Response) => {
-    const productRepository = await db.getRepository(productModel)
+    const productRepository = db.getRepository(productModel)
 
     // retrieve data from passed json
     const data = req.body
-    const queriedID = data.id
     const name = data.name
     const quantity = data.quantity
-    
+
     // check for missing arguments
     if (!name) {
-            res.status(400).send({ message: "missing name" })
-            return
-        }
-    if (!quantity){
         res.status(400).send({ message: "missing name" })
         return
     }
-
-    const returned = await productRepository.find({
-        where: {
-            id: queriedID
-        }
-    })
-
-    // check for existing product with same ID
-    if (returned.length > 0) {
-        res.status(400).send({
-            message: "Another product with this ID already exists"
-        })
+    if (!quantity) {
+        res.status(400).send({ message: "missing name" })
         return
     }
+    try {
 
-    // attempt persistence of passed product into database
-    const toPersist = new productModel()
-    toPersist.id = queriedID
-    toPersist.name = name
-    toPersist.quantity = quantity
-    await productRepository.save(toPersist)
-        .then(() => {
-            console.log('Product added successfully');
-            res.status(200).send({
-                message: `${toPersist.name} was successfully persisted with a stock of ${toPersist.quantity} and ID=${toPersist.id}...`
-            })
-            return
-        }).catch((error) => {
-            console.log("Error occured while persisting");
-            res.status(500).send({
-                message: error.message
-            })
-            return
+        // attempt persistence of passed product into database
+        const toPersist = new productModel()
+        toPersist.name = name
+        toPersist.quantity = quantity
+        const persisted = await productRepository.save(toPersist)
+        console.log('Product added successfully');
+        res.status(200).send({
+            message: `${persisted.name} was successfully persisted with a stock of ${persisted.quantity} and ID=${persisted.id}...`
         })
-    
+    } catch (error: unknown) {
+        console.error(error);
+        res.status(500).send({
+            message: "An Unknown error occured"
+        })
+    }
 }
 
 const updateProduct = async (req: Request, res: Response) => {
-    const productRepository = await db.getRepository(productModel)
-
     const newData = req.body
     const queriedID = newData.id
 
@@ -109,13 +104,14 @@ const updateProduct = async (req: Request, res: Response) => {
         res.status(400).send({ message: "missing name" })
         return
     }
-    if (!newData.quantity){
+    if (!newData.quantity) {
         res.status(400).send({ message: "missing quantity" })
         return
     }
 
     // update entity
-    await db.createQueryBuilder()
+    try {
+        const updatedData = await db.createQueryBuilder()
             .update(productModel)
             .set({
                 name: newData.name,
@@ -123,23 +119,26 @@ const updateProduct = async (req: Request, res: Response) => {
             })
             .andWhere(
                 "id = :id",
-                {id: queriedID}
+                { id: queriedID }
             )
             .execute()
-            .then((returnedData) => {
-                res.status(200).send({
-                    message: `${returnedData.affected} product(s) was updated'`
-                })
-                return
-            })
-            .catch((error) => {
-                res.status(400).send({ 
-                    error: error.message
-                })
-                return
-            })
 
+        if (updatedData.affected != 0) {
+            res.status(200).send({
+                message: `${updatedData.affected} product(s) was updated'`
+            })
+        } else {
+            res.status(400).send({
+                error: `No product exists with an ID of ${queriedID}`
+            })
+        }
+    } catch (error: unknown) {
+        console.error(error)
+        res.status(400).send({
+            error: "An Unknown error occured"
+        })
+    }
 }
 
 
-export default {createProduct, updateProduct, getProductWithID}
+export default { createProduct, updateProduct, getProductWithID, getAllProducts }

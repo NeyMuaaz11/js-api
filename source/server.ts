@@ -2,11 +2,11 @@ import http from 'http';
 import express, { Express } from 'express';
 import router from "./router/routes"
 
-export default class APIServer{
+export default class APIServer {
 
     app: Express;
 
-    constructor(app: Express){
+    constructor(app: Express) {
         this.app = app
     }
 
@@ -17,10 +17,10 @@ export default class APIServer{
     }
 
     start(): void {
-        var app = this.setup()
+        const app = this.setup()
         const server = http.createServer(app)
         const PORT = 8080
-        server.listen(PORT, () =>{
+        server.listen(PORT, () => {
             console.log(`API is live on http://localhost:${PORT}`)
         })
     }
