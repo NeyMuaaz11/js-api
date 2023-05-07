@@ -1,6 +1,6 @@
 import http from 'http';
 import express, { Express } from 'express';
-const routes = require("./router/routes")
+import router from "./router/routes"
 
 export default class APIServer{
 
@@ -12,7 +12,7 @@ export default class APIServer{
 
     setup(): Express {
         this.app.use(express.json())
-        this.app.use('/', routes.router)
+        this.app.use('/', router)
         return this.app
     }
 

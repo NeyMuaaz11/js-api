@@ -1,4 +1,4 @@
-import APIServer from "./server.ts";
+import APIServer from "./server";
 import express from "express"
 
 const app = express()
